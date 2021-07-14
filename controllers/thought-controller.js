@@ -28,11 +28,10 @@ const thoughtController = {
         },
     
     //POST new thought
-    addThought({body}, res){
+    addThought({params, body}, res){
         Thought.create(body)
-            .then(dbThoughtData => {
-                User.findOneAndUpdate({username: body.username}, {$push: {thoughts: dbThoughtData._id} })
-            })
+            .then(({_id}) => {
+                return User.findOneAndUpdate({_id: params.userId}, {$push: {thoughts: _id} }, {new: true});})
             .then(dbThoughtData => res.json(dbThoughtData))
             .catch(err => res.json(err));
     },
