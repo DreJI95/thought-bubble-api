@@ -27,7 +27,7 @@ const userController = {
             res.sendStatus(400)});
         },
     
-    //POST new user users
+    //POST new user
     addUser({body}, res){
         User.create(body)
             .then(dbUserData => res.json(dbUserData))
@@ -48,10 +48,34 @@ const userController = {
 
     //DELETE existing users and thoughts by _ids
     deleteUser(){
-        User.findOneAndDelete({ _id: params.id})
+        User.findOneAndDelete({ _id: params.id}, { $pull: {thoughts}})
         .deleteMany({
             path: 'thoughts'
         })
+        .then(dbUserData => {
+            if (!dbUserData) {
+                res.status(404).json({message: 'No User found with this id!'});
+                return;
+            }
+        })
+        .catch(err => res.json(err));
+    },
+
+    //POST new friend to user
+    addUserfriend({params}, res){
+        User.findOneAndUpdate({_id: params.userId} , { $push: { friends: params.friendsId } }, {runValidators: true})
+            .then(dbUserData => {
+                if (!dbUserData) {
+                    res.status(404).json({message: 'No User found with this id!'});
+                    return;
+                }
+            })
+            .catch(err => res.json(err));
+    },
+
+    //DELETE a friend of user
+    deleteUserfriend({params}, res){
+        User.findOneAndUpdate({ _id: params.userId}, { $pull: { friends: params.friendsId } })
         .then(dbUserData => {
             if (!dbUserData) {
                 res.status(404).json({message: 'No User found with this id!'});
