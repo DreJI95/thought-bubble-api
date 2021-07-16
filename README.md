@@ -21,6 +21,19 @@
   # Usage 
      You can add, update, search and delete users or their thoughts using API requests through ExpressJS.
 
+   MongoDB & Express demo:
+   https://drive.google.com/file/d/1etkEi28TU69CsK6OKyArSLlDu2vsCcUo/view?usp=sharing
+
+   User API demos:
+   UserDelete -> https://drive.google.com/file/d/1e7Adg9jCu70iRLGvjtffeu05fe8pXkbG/view?usp=sharing
+   UserGetPost -> https://drive.google.com/file/d/1OgXQL1IqN_GC_dxwVNtCT02H1FFvY32k/view?usp=sharing
+   UserPut + FriendPostDelete -> https://drive.google.com/file/d/142UMV5SRGHcnCOKrSHFtr-zqwX7jGM1h/view?usp=sharing
+
+   Thought API demos:
+   ThoughtGetPost -> https://drive.google.com/file/d/1CkInhT8WFdFGanMS5Jlp4Npv97DTI4hu/view?usp=sharing
+   ThoughtPut + ReactionPost -> https://drive.google.com/file/d/1dFexT0U2SBYuwftshgCq4HhePskf_YhX/view?usp=sharing
+   ThoughtDelete + ReactionDelete -> https://drive.google.com/file/d/1LEuWTyZVF2MLyyq7Q42Epq0UD92xCilt/view?usp=sharing
+
   # License
      MIT: https://choosealicense.com/licenses/mit/
 
