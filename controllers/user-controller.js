@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, Thought } = require('../models');
 
 const userController = {
     //GET all users
@@ -14,10 +14,22 @@ const userController = {
 
     //GET user by id
     getUserById({params}, res) {
+        let obj = {};
+
         User.findOne({ _id: params.id})
-        .populate('thoughts','friends')
-        //.select('__v')
-        .then(dbUsersData => res.json(dbUsersData))
+        .then(dbUserData => { 
+            obj.dbUser = dbUserData;
+            return Thought.find({_id: {$in: dbUserData.thoughts}}, "-username");
+        })
+        .then(dbThoughtsData => {
+            
+            obj.dbThoughts = dbThoughtsData;
+            return User.find({_id: {$in: obj.dbUser.friends}}, "-email -_id -friendCount");
+        })
+        .then(dbfriendData => {
+
+            obj.dbFriends = dbfriendData
+            res.json(obj)})
         .catch(err => {
             console.log(err);
             res.sendStatus(400)});
@@ -39,6 +51,7 @@ const userController = {
                 return;
             }
             res.json(dbUserData);
+            return Thought.findOneAndUpdate({_id: {$in: dbUserData.thoughts}}, {username: body.username}, {new: true})
         })
         .catch(err => res.json(err));
     },
@@ -49,10 +62,11 @@ const userController = {
         .then(dbUserData => {
             if (!dbUserData) {
                 res.status(404).json({message: 'No User found with this id!'});
-                return;
             }
             res.json(dbUserData);
+            return Thought.deleteMany({_id: {$in: dbUserData.thoughts}});
         })
+        .then(dbUserData => res.json(dbUserData))
         .catch(err => res.json(err));
     },
 

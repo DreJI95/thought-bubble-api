@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 
 const UserSchema = new Schema({
 
@@ -10,10 +10,10 @@ const UserSchema = new Schema({
     },
     email:{
         type: String,
-        unique: [true, 'Username is also used'],
+        unique: [true, 'Email is also used'],
         validate: {
-            validator: function() {
-                return /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/
+            validator: function(checkEmail) {
+                return (/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/).test(checkEmail);
             },
             message: props => `${props.value} is not an email address.`
         },

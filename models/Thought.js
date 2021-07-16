@@ -1,6 +1,6 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 
-const ReplySchema = new Schema({
+const ReactionSchema = new Schema({
 
     reactionId:{
         type: Schema.Types.ObjectId,
@@ -8,10 +8,8 @@ const ReplySchema = new Schema({
     },
     reactionBody:{
         type: String,
-        required: [true, 'Reply required'],
-        validator: function() {
-            return /{1,280}/
-        },
+        required: true,
+        validator: (checkReaction) => { return (checkReaction.length < 280)},
         message: props => `Your replies need to be between 1 to 280 characters.`
     },
     username:{
@@ -22,17 +20,20 @@ const ReplySchema = new Schema({
         type: Date,
         default: Date.now,
         /*get: createdAtVal => dateFormat(createdAtVal) //include getter for date format */
-    },
+    }
+},
+{
+    toJSON: {
+        getters: true
+    }
 })
 
 const ThoughtSchema = new Schema({
 
     thoughtText:{
         type: String,
-        required: [true, 'Username required'],
-        validator: function() {
-            return /{1,280}/
-        },
+        required: [true, 'Thought required'],
+        validator: (checkText) => { return (checkText.length < 280 && checkText.length > 1)},
         message: props => `Your thoughts need to be between 1 to 280 characters.`
     },
     createdAt:{
@@ -51,7 +52,7 @@ const ThoughtSchema = new Schema({
         virtuals: true,
         getters: true
     }
-})
+});
 
 ThoughtSchema.virtual('reactionCount').get(function(){
     return this.reactions.length;
